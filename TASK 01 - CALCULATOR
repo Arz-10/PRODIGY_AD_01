@@ -1,0 +1,112 @@
+#This is the code for task 01 that is to build a simple calculator app which performs basic arithmetic functions.
+#To make this calculator app I have used Python language. 
+
+import tkinter as tk
+import math
+
+# Function to evaluate the expression
+def evaluate_expression(event=None):
+    try:
+        result = eval(entry.get())
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except Exception as e:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
+
+# Function to update the input field
+def button_click(value):
+    entry.insert(tk.END, value)
+
+# Function to clear the input field
+def clear():
+    entry.delete(0, tk.END)
+
+# Function to delete the last character (Backspace)
+def backspace():
+    entry.delete(len(entry.get())-1, tk.END)
+
+# Functions for square, square root, cube, and cube root
+def square():
+    try:
+        result = float(entry.get()) ** 2
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
+
+def square_root():
+    try:
+        result = math.sqrt(float(entry.get()))
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
+
+def cube():
+    try:
+        result = float(entry.get()) ** 3
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
+
+def cube_root():
+    try:
+        result = float(entry.get()) ** (1/3)
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
+
+# Set up the main application window
+root = tk.Tk()
+root.title("Enhanced Calculator")
+
+# Entry field to display the expression/result
+entry = tk.Entry(root, width=20, font=('Arial', 24), borderwidth=2, relief='solid')
+entry.grid(row=0, column=0, columnspan=5)
+
+# Buttons for digits and operations
+buttons = [
+    '7', '8', '9', '/', 'C',
+    '4', '5', '6', '*', '←',
+    '1', '2', '3', '-', 'x²',
+    '0', '=', '.', '+', '√',
+    'x³', '∛'
+]
+
+# Create buttons and place them on the grid
+row_value = 1
+col_value = 0
+for button in buttons:
+    btn = tk.Button(root, text=button, width=5, height=1, font=('Arial', 18))
+    if button == "=":
+        btn.config(command=evaluate_expression, bg="#4CAF50", fg="white")
+        root.bind('<Return>', evaluate_expression)  
+    elif button == "C":
+        btn.config(command=clear, bg="#FFC107", fg="white")
+    elif button == "←":
+        btn.config(command=backspace, bg="#FF69B4", fg="white")
+    elif button in ["x²", "√", "x³", "∛", "+", "-", "*", "/","."]:
+        if button in ["x²", "√", "x³", "∛"]:
+            btn.config(command={"x²": square, "√": square_root, "x³": cube, "∛": cube_root}[button], bg="#9c7ac2", fg="white")
+        else:
+            btn.config(command=lambda x=button: button_click(x), bg="#9c7ac2", fg="white")
+    elif button.isdigit():
+        btn.config(command=lambda x=button: button_click(x), bg="#03A9F4", fg="white")
+    else:
+        btn.config(command=lambda x=button: button_click(x))
+    
+    btn.grid(row=row_value, column=col_value)
+    
+    col_value += 1
+    if col_value > 4:
+        col_value = 0
+        row_value += 1
+# Start the application
+root.mainloop()
